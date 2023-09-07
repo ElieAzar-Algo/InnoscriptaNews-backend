@@ -126,6 +126,20 @@ return [
 
     'cipher' => 'AES-256-CBC',
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | Third Party API Keys
+    |--------------------------------------------------------------------------
+    |
+    | This keys are used by the third party APIs to scrap data and from origin sources 
+    |
+    */
+    'newsapi_key' => env('NEWSAPI_KEY'),
+    'nytimme_api_key' => env('NYTIMES_API_KEY'),
+    'theguardien_api_key' => env('THEGUARDIEN_API_KEY'),
+
+
     /*
     |--------------------------------------------------------------------------
     | Maintenance Mode Driver
@@ -184,5 +198,6 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
     ])->toArray(),
+    
 
 ];
