@@ -11,14 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('preferences', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->char('fullName', 50);
-            $table->char('email', 50)->unique();
-            $table->char('password', 250);
-            $table->uuid('preference_id');
-            $table->foreign('preference_id')->references('id')->on('preferences')->onDelete('cascade');
-            $table->rememberToken();
+            $table->char('source', 100)->default('all');
+            $table->char('category', 100)->default('all');
+            $table->char('author', 100)->default('all');
             $table->timestamps();
         });
     }
@@ -28,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('preferences');
     }
 };
