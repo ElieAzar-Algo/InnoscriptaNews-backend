@@ -12,10 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('preferences', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->char('source', 100)->default('all');
-            $table->char('category', 100)->default('all');
-            $table->char('author', 100)->default('all');
+            $table->id();
+            $table->string('source', 100)->default('all');
+            $table->string('category', 100)->default('all');
+            $table->string('author', 100)->default('all');
             $table->timestamps();
         });
     }
