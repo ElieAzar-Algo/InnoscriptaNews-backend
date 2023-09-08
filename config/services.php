@@ -30,5 +30,8 @@ return [
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
+    'http' => [
+        'timeout' => 90, // Set a default global timeout for curl request to 60 seconds
+    ],
 
 ];

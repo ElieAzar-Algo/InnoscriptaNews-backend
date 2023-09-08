@@ -35,20 +35,22 @@ class getNews extends Command
         $categories = config('categories');
         $articles_count = 20;
 
-        foreach ($categories as $category){
+        foreach ($categories as $category)
+        {
             
             $url = "$this->HOST/$this->ENPOINT?language=en&apiKey=$key&sortBy=publishedAt&pageSize=$articles_count&category=$category";
             // echo($url);
             $response = Http::get($url);
             
-            //check if there is a reponse with json format option inn the header
-            if ($response) {
+            if ($response)
+            {
                 $data = $response->json();
                 $articles = $data['articles'];
                 foreach($articles as $article)
                 {
                     //rule: check if the article is "removed" or "[removed]"
-                    if (strtolower($article['source']['name']) == '[removed]' || strtolower($article['source']['name']) == 'removed') {
+                    if (strtolower($article['source']['name']) == '[removed]' || strtolower($article['source']['name']) == 'removed')
+                    {
                         continue; //skip this article and continue to the next one
                     }
                     $dateTime = new DateTime($article['publishedAt']);
@@ -67,10 +69,13 @@ class getNews extends Command
                         'lang'        =>'en',
                     ]);
                 }
-            } else {
+            } 
+            else 
+            {
                 Log::error("Error: Unable to retrieve JSON data");
             }
             Log::info("$category news is fetched and saved successfully");
         }
+        Log::error("JOB IS DONE! Fetching and Storing news data from $this->HOST is completed");
     }
 }
