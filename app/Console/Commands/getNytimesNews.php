@@ -74,7 +74,7 @@ class getNytimesNews extends Command
                 $articleModel = new Article();
                 $createArticles = $articleModel->create([
                     'api'         => $url,
-                    'source'      => $article['source']? $article['source']: "no source",
+                    'source'      => $article['source']? $article['source']: "New York Times",
                     'author'      => $article['byline']?$article['byline']:"no author",
                     'title'       => $article['title'],
                     'description' => $article['abstract']?$article['abstract']:"no description",

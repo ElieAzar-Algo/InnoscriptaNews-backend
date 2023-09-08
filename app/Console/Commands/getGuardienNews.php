@@ -2,10 +2,12 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Article;
 use DateInterval;
 use DateTime;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class getGuardienNews extends Command
 {
@@ -31,12 +33,56 @@ class getGuardienNews extends Command
     public function handle()
     {
         $key = config('app.theguardien_api_key');
-        $currentDate = (new DateTime())->format('Y-m-d');
+        $categories = config('categories');
+        $articles_count = 20;
 
+        $currentDate = (new DateTime())->format('Y-m-d');
         //substract from the current data 1 day P1D (period 1 day)
         $previousDate = (new DateTime())->sub(new DateInterval('P1D'))->format('Y-m-d');
 
-        $data = Http::get("$this->HOST/$this->ENPOINT?total=49&page-size=49&api-key=$key&order-by=newest&from-date=$previousDate&to-date=$currentDate");
-        echo $data;
+        foreach ($categories as $category)
+        {
+            $url = "$this->HOST/$this->ENPOINT?total=49&q=$category&page-size=$articles_count&api-key=$key&order-by=newest&from-date=$previousDate&to-date=$currentDate";
+            $result = Http::timeout(120)->get($url);
+
+            if($result->successful())
+            {
+                $res = $result->json();
+                $response = $res['response'];
+                if(count($response['results']) > 0)
+                {
+                    $articles = $response['results'];
+                    foreach($articles as $article)
+                    {   
+                        //rule(ignore duplicate articles): if news url exists skip the article
+                        $isDuplicate = duplicateArticles($article['webUrl']);
+                        if($isDuplicate) continue;
+                        
+                        $articleModel = new Article();
+                        $dateTime = new DateTime($article['webPublicationDate']);
+                        $formattedDate = $dateTime->format('Y-m-d H:i:s');
+                        $createArticles = $articleModel->create([
+                            'api'         => $url,
+                            'source'      => "The Guardien",
+                            'author'      => "The Guardien",
+                            'title'       => $article['webTitle'],
+                            'description' => $article['webTitle']?$article['webTitle']:"no description",
+                            'image_url'   => "https://gocycle.com/wp-content/uploads/2019/02/theguardian.jpg",
+                            'article_url' => $article['webUrl'],
+                            'publishedAt' => $formattedDate,
+                            'category'    => $category,
+                            'lang'        =>'en',
+                        ]);
+                    }
+                }
+            }
+            else
+            {
+                Log::error("Error: Unable to retrieve JSON data");
+            }
+            Log::info("$category news is fetched from $this->HOST and saved successfully");
+        }
+        Log::info("JOB IS DONE! Fetching and Storing news data from $this->HOST is completed");
+
     }
 }
