@@ -16,12 +16,13 @@ class InitialValues extends Seeder
     public function run(): void
     {
        $preference = Preference::create($this->defaultPreferences());
+       //give the super admin user the default preferences (all)
        User::create($this->superAdmin($preference->id));
-
     }   
 
     private function defaultPreferences()
     {
+        //default preference values
         return [
             'source' => 'all',
             'category' => 'all',
@@ -31,11 +32,11 @@ class InitialValues extends Seeder
 
     private function superAdmin($preference)
     {
-
+        //calling super admin user from the config file that should be set in the environment file
         return [
             'fullName'  => 'Super Admin',
-            'email'     => 'superAdmin@mail.com',
-            'password'  =>  Hash::make('P@ssw0rd'),
+            'email'     => config('app.super_admin_email'),
+            'password'  => Hash::make(config('app.super_admin_password')),
             'preference_id' => $preference
         ];
 

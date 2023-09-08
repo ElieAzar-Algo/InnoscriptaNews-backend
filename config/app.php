@@ -132,14 +132,25 @@ return [
     | Third Party API Keys
     |--------------------------------------------------------------------------
     |
-    | This keys are used by the third party APIs to scrap data and from origin sources 
+    | These keys are used by the third party APIs to scrap data and from origin sources 
     |
     */
     'newsapi_key' => env('NEWSAPI_KEY'),
     'nytimme_api_key' => env('NYTIMES_API_KEY'),
     'theguardien_api_key' => env('THEGUARDIEN_API_KEY'),
 
-
+     /*
+    |--------------------------------------------------------------------------
+    | Super Admin credentials
+    |--------------------------------------------------------------------------
+    |
+    | these credentials configurations used to create the initialValues super admin
+    | in the seeder when seeding db command run
+    |
+    */
+    'super_admin_password' => env('SUPER_ADMIN_PASSWORD'),
+    'super_admin_email' => env('SUPER_ADMIN_EMAIL'),
+    
     /*
     |--------------------------------------------------------------------------
     | Maintenance Mode Driver
