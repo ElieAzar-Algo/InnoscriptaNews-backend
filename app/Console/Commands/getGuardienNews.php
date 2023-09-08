@@ -48,7 +48,7 @@ class getGuardienNews extends Command
             $url = "$this->HOST/$this->ENPOINT?total=49&q=$category&page-size=$articles_count&api-key=$key&order-by=newest&from-date=$previousDate&to-date=$currentDate";
             $result = Http::timeout(120)->get($url);
 
-            if($result->successful())
+            if($result->successful()) 
             {
                 $res = $result->json();
                 $response = $res['response'];
@@ -77,15 +77,15 @@ class getGuardienNews extends Command
                             'lang'        =>'en',
                         ]);
                     }
+                    Log::info("$category news is fetched from $this->HOST and saved successfully");
                 }
+                Log::info("JOB IS DONE! Fetching and Storing news data from $this->HOST is completed");
             }
             else
             {
                 Log::error("Error: Unable to retrieve JSON data");
             }
-            Log::info("$category news is fetched from $this->HOST and saved successfully");
         }
-        Log::info("JOB IS DONE! Fetching and Storing news data from $this->HOST is completed");
 
     }
 }

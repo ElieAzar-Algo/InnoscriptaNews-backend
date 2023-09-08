@@ -77,13 +77,12 @@ class getNews extends Command
                         'lang'        =>'en',
                     ]);
                 }
+                Log::info("$category news is fetched from $this->HOST and saved successfully");
             } 
             else 
             {
                 Log::error("Error: Unable to retrieve JSON data");
             }
-            Log::info("$category news is fetched from $this->HOST and saved successfully");
         }
-        Log::info("JOB IS DONE! Fetching and Storing news data from $this->HOST is completed");
     }
 }
