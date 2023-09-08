@@ -44,6 +44,10 @@ class getNytimesNews extends Command
         {
             foreach($response['results'] as $article)
             {
+                //rule(ignore duplicate articles): if news url exists skip the article
+                $isDuplicate = duplicateArticles($article['url']);
+                if($isDuplicate) continue;
+                
                 $articleCategory = $article['nytdsection'];
 
                 // if nytdsection matches one of the categories
@@ -51,6 +55,7 @@ class getNytimesNews extends Command
                 {
                    $categoryToBeStored = $articleCategory;
                 }
+                //handling the well category and set it to health
                 if($articleCategory == 'well') $categoryToBeStored = $categories['HEALTH'];
 
                 $dateTime = new DateTime($article['published_date']);
@@ -79,7 +84,7 @@ class getNytimesNews extends Command
                     'category'    => $categoryToBeStored,
                     'lang'        =>'en',
                 ]);
-                Log::info("$categoryToBeStored news is fetched and saved successfully");
+                Log::info("$categoryToBeStored news is fetched from $this->HOST and saved successfully");
             }
         }
         else

@@ -7,6 +7,7 @@ use DateTime;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use App\helpers;
 
 class getNews extends Command
 {
@@ -37,10 +38,9 @@ class getNews extends Command
 
         foreach ($categories as $category)
         {
-            
             $url = "$this->HOST/$this->ENPOINT?language=en&apiKey=$key&sortBy=publishedAt&pageSize=$articles_count&category=$category";
             // echo($url);
-            $response = Http::get($url);
+            $response = Http::timeout(120)->get($url);
             
             if ($response)
             {
@@ -48,14 +48,19 @@ class getNews extends Command
                 $articles = $data['articles'];
                 foreach($articles as $article)
                 {
-                    //rule: check if the article is "removed" or "[removed]"
+                    //rule(ignore removed articles): check if the article is "removed" or "[removed]"
                     if (strtolower($article['source']['name']) == '[removed]' || strtolower($article['source']['name']) == 'removed')
                     {
                         continue; //skip this article and continue to the next one
                     }
+                    $articleModel = new Article();
+
+                    //rule(ignore duplicate articles): if news url exists skip the article
+                    $isDuplicate = duplicateArticles($article['url']);
+                    if($isDuplicate) continue;
+
                     $dateTime = new DateTime($article['publishedAt']);
                     $formattedDate = $dateTime->format('Y-m-d H:i:s');
-                    $articleModel = new Article();
                     $createArticles = $articleModel->create([
                         'api'         => $url,
                         'source'      => $article['source']['name']? $article['source']['name']: "no source",
@@ -74,8 +79,8 @@ class getNews extends Command
             {
                 Log::error("Error: Unable to retrieve JSON data");
             }
-            Log::info("$category news is fetched and saved successfully");
+            Log::info("$category news is fetched from $this->HOST and saved successfully");
         }
-        Log::error("JOB IS DONE! Fetching and Storing news data from $this->HOST is completed");
+        Log::info("JOB IS DONE! Fetching and Storing news data from $this->HOST is completed");
     }
 }
