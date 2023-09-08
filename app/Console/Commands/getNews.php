@@ -2,8 +2,11 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Article;
+use DateTime;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class getNews extends Command
 {
@@ -29,7 +32,45 @@ class getNews extends Command
     public function handle()
     {
         $key = config('app.newsapi_key');
-        $data = Http::get("$this->HOST/$this->ENPOINT?language=en&apiKey=$key&sortBy=publishedAt&pageSize=100&category=general");
-        echo $data;
+        $categories = config('categories');
+        $articles_count = 20;
+
+        foreach ($categories as $category){
+            
+            $url = "$this->HOST/$this->ENPOINT?language=en&apiKey=$key&sortBy=publishedAt&pageSize=$articles_count&category=$category";
+            // echo($url);
+            $response = Http::get($url);
+            
+            //check if there is a reponse with json format option inn the header
+            if ($response) {
+                $data = $response->json();
+                $articles = $data['articles'];
+                foreach($articles as $article)
+                {
+                    //rule: check if the article is "removed" or "[removed]"
+                    if (strtolower($article['source']['name']) == '[removed]' || strtolower($article['source']['name']) == 'removed') {
+                        continue; //skip this article and continue to the next one
+                    }
+                    $dateTime = new DateTime($article['publishedAt']);
+                    $formattedDate = $dateTime->format('Y-m-d H:i:s');
+                    $articleModel = new Article();
+                    $createArticles = $articleModel->create([
+                        'api'         => $url,
+                        'source'      => $article['source']['name']? $article['source']['name']: "no source",
+                        'author'      => $article['author']?$article['author']:"no author",
+                        'title'       => $article['title'],
+                        'description' => $article['description']?$article['description']:"no description",
+                        'image_url'   => $article['urlToImage']?$article['urlToImage']:"no image",
+                        'article_url' => $article['url'],
+                        'publishedAt' => $formattedDate,
+                        'category'    => $category,
+                        'lang'        =>'en',
+                    ]);
+                }
+            } else {
+                Log::error("Error: Unable to retrieve JSON data");
+            }
+            Log::info("$category news is fetched and saved successfully");
+        }
     }
 }
