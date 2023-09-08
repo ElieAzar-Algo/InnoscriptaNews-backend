@@ -32,6 +32,9 @@ class getNytimesNews extends Command
      */
     public function handle()
     {
+        //log that the command has been called by a cron or schedule job
+        LogCommandCall($this->signature);
+
         $key = config('app.nytimme_api_key');
         $categories = config('categories');
         $categoryToBeStored ='general';

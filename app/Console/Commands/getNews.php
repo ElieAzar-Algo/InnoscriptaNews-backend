@@ -32,6 +32,9 @@ class getNews extends Command
      */
     public function handle()
     {
+         //log that the command has been called by a cron or schedule job
+         LogCommandCall($this->signature);
+         
         $key = config('app.newsapi_key');
         $categories = config('categories');
         $articles_count = 20;

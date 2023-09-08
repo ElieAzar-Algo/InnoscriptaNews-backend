@@ -32,6 +32,9 @@ class getGuardienNews extends Command
      */
     public function handle()
     {
+        //log that the command has been called by a cron or schedule job
+        LogCommandCall($this->signature);
+        
         $key = config('app.theguardien_api_key');
         $categories = config('categories');
         $articles_count = 20;
