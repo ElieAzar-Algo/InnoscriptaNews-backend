@@ -20,7 +20,7 @@ return new class extends Migration
             $table->text('description');
             $table->text('image_url');
             $table->text('article_url');
-            $table->dateTime('publishedAt');
+            $table->timestamp('publishedAt');
             $table->string('category', 100);
             $table->string('lang', 5);
             $table->timestamps();

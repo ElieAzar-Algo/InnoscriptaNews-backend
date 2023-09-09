@@ -14,4 +14,5 @@ class Preference extends Model
         'category',
         'author'
     ];
+    
 }

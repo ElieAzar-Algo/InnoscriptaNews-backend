@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
 use App\Requests\Users\CreateUserValidator;
 use App\Requests\Users\LoginUserValidator;
 use App\Services\UserService;
 use Auth;
-use Illuminate\Http\Request;
 
 class AuthController extends BaseController
 {
@@ -42,6 +40,7 @@ class AuthController extends BaseController
             $user = Auth::user();
             $success['token'] = $user->createToken('InnoscriptaNews')->plainTextToken;
             $success['fullName'] = $user->fullName;
+            $success['pereference'] = $user->preference;
 
             return $this->sendReponse($success);
         }

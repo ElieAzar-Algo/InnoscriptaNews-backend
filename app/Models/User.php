@@ -24,6 +24,11 @@ class User extends Authenticatable
         'preference_id'
     ];
 
+    public function preference()
+    {
+        return $this->belongsTo(Preference::class);
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *
