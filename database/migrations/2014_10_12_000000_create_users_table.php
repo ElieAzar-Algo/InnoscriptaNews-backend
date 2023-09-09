@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('fullName', 50);
             $table->string('email', 50)->unique();
             $table->string('password', 250);
-            $table->unsignedBigInteger('preference_id');
+            $table->unsignedBigInteger('preference_id')->default(1);
             $table->foreign('preference_id')->references('id')->on('preferences')->onDelete('cascade');
             $table->rememberToken();
             $table->timestamps();

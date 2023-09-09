@@ -17,3 +17,6 @@ NOTE comment out the everySixHours schedules and uncomment the everyFiveMinutes 
 
 the compatible CRON job with everySixHours Schedules is below:
 0 */6 * * * cd < here the path of the project > && php artisan schedule:run >> /dev/null 2>&1
+
+
+# Authentication using Sanctum
