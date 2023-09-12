@@ -24,9 +24,9 @@ class User extends Authenticatable
         'preference_id'
     ];
 
-    public function preference()
+    public function preferences()
     {
-        return $this->belongsTo(Preference::class);
+        return $this->belongsToMany(User::class);
     }
 
     /**

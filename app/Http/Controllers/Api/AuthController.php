@@ -22,7 +22,9 @@ class AuthController extends BaseController
         }
 
         $user = $this->userService->createUser($createUserValidator->request()->all());
+        // $user->preferences()->attach([1]);
         $message['user'] = $user;
+        $message['prefernces'] = $user->preferences;
         $message['token'] = $user->createToken('InnoscriptaNews')->plainTextToken;
         return $this->sendReponse($message);
     }
@@ -40,7 +42,7 @@ class AuthController extends BaseController
             $user = Auth::user();
             $success['token'] = $user->createToken('InnoscriptaNews')->plainTextToken;
             $success['fullName'] = $user->fullName;
-            $success['pereference'] = $user->preference;
+            $success['pereferences'] = $user->preferences;
 
             return $this->sendReponse($success);
         }
