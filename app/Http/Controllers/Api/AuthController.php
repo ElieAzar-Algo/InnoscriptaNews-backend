@@ -22,9 +22,9 @@ class AuthController extends BaseController
         }
 
         $user = $this->userService->createUser($createUserValidator->request()->all());
-        // $user->preferences()->attach([1]);
+        $user->preferences()->attach([1]);
+        $user->load('preferences'); // Eager load the preferences relationship
         $message['user'] = $user;
-        $message['prefernces'] = $user->preferences;
         $message['token'] = $user->createToken('InnoscriptaNews')->plainTextToken;
         return $this->sendReponse($message);
     }
