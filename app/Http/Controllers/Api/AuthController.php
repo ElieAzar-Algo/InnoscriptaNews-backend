@@ -6,6 +6,7 @@ use App\Requests\Users\CreateUserValidator;
 use App\Requests\Users\LoginUserValidator;
 use App\Services\UserService;
 use Auth;
+use Illuminate\Http\JsonResponse;
 
 class AuthController extends BaseController
 {
@@ -15,10 +16,12 @@ class AuthController extends BaseController
     {
         $this->userService = $userService;
     }
-    public function register(CreateUserValidator $createUserValidator)
+    public function register(CreateUserValidator $createUserValidator) : JsonResponse
     {
         if (!empty($createUserValidator->getErrors())){
-            return response()->json($createUserValidator->getErrors(),406);
+            return response()->json([
+                "status" => 400,
+                "errors" => $createUserValidator->getErrors()],400);
         }
 
         $user = $this->userService->createUser($createUserValidator->request()->all());
@@ -29,7 +32,7 @@ class AuthController extends BaseController
         return $this->sendReponse($message);
     }
 
-    public function login(LoginUserValidator $loginUserValidator)
+    public function login(LoginUserValidator $loginUserValidator) : JsonResponse
     {
         if (!empty($loginUserValidator->getErrors())){
             return response()->json($loginUserValidator->getErrors(),406);

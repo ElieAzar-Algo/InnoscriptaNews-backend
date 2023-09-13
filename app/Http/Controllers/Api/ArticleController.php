@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 use App\Services\ArticleService;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
@@ -13,7 +14,7 @@ class ArticleController extends BaseController
         $this->articleService = $articleService;
     }
 
-    public function index(Request $request)
+    public function index(Request $request) : Collection
     {
         return $this->articleService->getArticles($request);
     }
