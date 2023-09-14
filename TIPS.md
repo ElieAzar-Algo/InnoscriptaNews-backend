@@ -20,3 +20,19 @@ the compatible CRON job with everySixHours Schedules is below:
 
 
 # Authentication using Sanctum
+
+
+# check mysql in container
+mysql -u elie -p -h mysql -P 3306
+
+# reduce docker compose build time
+COMPOSER_DISABLE_NETWORK=1 composer install
+
+# check workers
+docker-compose logs -f worker
+OR 
+docker-compose -f docker-compose-app.yml logs  worker
+
+# build and run the 2 docker-compose files
+docker-compose -f docker-compose-mysql.yml up -d --build
+docker-compose -f docker-compose-app.yml up -d --build
