@@ -35,7 +35,9 @@ class AuthController extends BaseController
     public function login(LoginUserValidator $loginUserValidator) : JsonResponse
     {
         if (!empty($loginUserValidator->getErrors())){
-            return response()->json($loginUserValidator->getErrors(),406);
+            return response()->json([
+                "status" => 400,
+                "errors" => $loginUserValidator->getErrors()],400);
         }
 
         $request = $loginUserValidator->request();
@@ -44,8 +46,8 @@ class AuthController extends BaseController
         {
             $user = Auth::user();
             $success['token'] = $user->createToken('InnoscriptaNews')->plainTextToken;
-            $success['fullName'] = $user->fullName;
-            $success['pereferences'] = $user->preferences;
+            $user->load('preferences'); // Eager load the preferences relationship
+            $success['user'] = $user;
 
             return $this->sendReponse($success);
         }

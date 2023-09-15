@@ -35,7 +35,7 @@ class UserService
             ]);
             $user->preferences()->attach($preference->id);
         }
-    
+        $user->load('preferences');
         return $user;
     }
         

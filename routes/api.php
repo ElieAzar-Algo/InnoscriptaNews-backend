@@ -28,4 +28,5 @@ Route::middleware('auth:sanctum')->controller(ArticleController::class)->group(f
 
 Route::middleware('auth:sanctum')->controller(UserController::class)->group(function(){
     Route::post('storeUserPreferences', 'storeUserPreferences');
+    Route::get('getUser', 'getUser');
 });
